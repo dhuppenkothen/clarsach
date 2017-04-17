@@ -1,4 +1,4 @@
-Clarsach: Lightweight response matrix calculations in Python
+Clàrsach: Lightweight response matrix calculations in Python
 ==================================================
 
 The analysis of X-ray spectra often depends on the correct 
