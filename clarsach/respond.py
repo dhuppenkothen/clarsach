@@ -1,9 +1,9 @@
 # Contains functionality for responses
 
 import numpy as np
-
 import astropy.io.fits as fits
 
+__all__ = ["RMF", "ARF"]
 
 class RMF(object):
     
@@ -203,4 +203,66 @@ class RMF(object):
                 resp_idx += current_num_chans
 
         return counts
-    
+
+class ARF(object):
+
+    def __init__(self, filename):
+
+        self._load_arf(filename)
+        pass
+
+    def _load_arf(self, filename):
+        """
+        Load an ARF from a FITS file.
+        
+        Parameters
+        ----------
+        filename : str
+            The file name with the RMF file
+            
+        Attributes
+        ----------
+
+        """
+        # open the FITS file and extract the MATRIX extension
+        # which contains the redistribution matrix and 
+        # anxillary information
+        hdulist = fits.open(filename)
+        h = hdulist["SPECRESP"]
+        data = h.data
+        hdr = h.header
+        hdulist.close()
+
+        # extract + store the attributes described in the docstring
+
+        self.e_low = np.array(data.field("ENERG_LO"))
+        self.e_high = np.array(data.field("ENERG_HI"))
+        self.specresp = np.array(data.field("SPECRESP"))
+
+        return
+
+    def apply_arf(self, spec):
+        """
+        Fold the spectrum through the ARF.
+
+        The ARF is a single vector encoding the effective area information
+        about the detector. A such, applying the ARF is a simple
+        multiplication with the input spectrum.
+
+        Parameters
+        ----------
+        spec : numpy.ndarray
+            The (model) spectrum to be folded
+
+        Returns
+        -------
+        s_arf : numpy.ndarray
+            The (model) spectrum after folding, in
+            counts/s/channel
+
+        """
+        assert spec.shape[0] == self.specresp.shape[0], "The input spectrum must " \
+                                                      "be of same size as the " \
+                                                      "ARF array."
+
+        return np.array(spec) * self.specresp
