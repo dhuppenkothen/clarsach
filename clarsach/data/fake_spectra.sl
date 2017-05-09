@@ -1,5 +1,9 @@
 #! /usr/bin/env isis
 
+%% Generate fake ACIS and HETG spectra for clarsach
+%% Download arf and rmf files here:
+%% http://cxc.harvard.edu/caldb/prop_plan/grating/
+
 variable EXPOSURE = 100.e3;  % A 100 ks exposure time
 variable NORM = 1.0, PHOINDEX = 2.0;
 
