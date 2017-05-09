@@ -1,1 +1,1 @@
-from powerlaw import *
+from clarsach.models.powerlaw import *
