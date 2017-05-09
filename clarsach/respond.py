@@ -54,7 +54,17 @@ class RMF(object):
         # which contains the redistribution matrix and 
         # anxillary information
         hdulist = fits.open(filename)
-        h = hdulist["MATRIX"]
+
+        # get all the extension names
+        extnames = np.array([h.name for h in hdulist])
+
+        # figure out the right extension to use
+        if "MATRIX" in extnames:
+            h = hdulist["MATRIX"]
+
+        elif "SPECRESP MATRIX" in extnames:
+            h = hdulist["SPECRESP MATRIX"]
+
         data = h.data
         hdr = h.header
         hdulist.close()
@@ -64,11 +74,12 @@ class RMF(object):
         f_chan = np.array(data.field('F_CHAN'))
         n_chan = np.array(data.field("N_CHAN"))
         matrix = np.array(data.field("MATRIX"))
+
         self.energ_lo = np.array(data.field("ENERG_LO"))
         self.energ_hi = np.array(data.field("ENERG_HI"))
         self.detchans = hdr["DETCHANS"]
         self.offset = self.__get_tlmin(h)
-        
+
         # flatten the variable-length arrays
         self.n_grp, self.f_chan, self.n_chan, self.matrix = \
                 self.__flatten_arrays(n_grp, f_chan, n_chan, matrix)
@@ -159,11 +170,9 @@ class RMF(object):
             counts/s/channel
 
         """    
-        # get the number of channels in the data
-        nchannels = spec.shape[0]
 
         # an empty array for the output counts
-        counts = np.zeros(nchannels)
+        counts = np.zeros(self.detchans)
 
         # index for n_chan and f_chan incrementation
         k = 0
@@ -172,9 +181,8 @@ class RMF(object):
         resp_idx = 0
 
         # loop over all channels
-        for i in range(nchannels):
-
-            # this is the current bin in the flux spectrum to 
+        for i in range(self.detchans):
+            # this is the current bin in the flux spectrum to
             # be folded
             source_bin_i = spec[i]
 
@@ -183,21 +191,18 @@ class RMF(object):
 
             # loop over the current number of groups
             for j in range(current_num_groups):
-                
+
                 # get the right index for the start of the counts array 
                 # to put the data into
                 counts_idx = int(self.f_chan[k] - self.offset)
-                
                 # this is the current number of channels to use
                 current_num_chans = int(self.n_chan[k])
-
                 # iterate k for next round
                 k += 1
-                
+
                 # add the flux to the subarray of the counts array that starts with 
                 # counts_idx and runs over current_num_chans channels
-                counts[counts_idx:counts_idx+current_num_chans] = counts[counts_idx:counts_idx+current_num_chans] + \
-                                                                  self.matrix[resp_idx:resp_idx+current_num_chans] * \
+                counts[counts_idx:counts_idx+current_num_chans] +=  self.matrix[resp_idx:resp_idx+current_num_chans] * \
                                                                   np.float(source_bin_i)
                 # iterate the response index for next round
                 resp_idx += current_num_chans
