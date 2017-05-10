@@ -42,5 +42,8 @@ class Powerlaw(object):
         """
         assert len(ener_lo) == len(ener_hi)
         # Computes flux spectrum [phot cm^-2 s^-1] for given energy grid
-        emid = 0.5 * (ener_lo + ener_hi)
-        return self.norm * np.power(emid, -self.phoindex)
+
+        # integral over the power law model
+        r = -self.norm * ener_hi**(-self.phoindex+1) + \
+            self.norm * ener_lo**(-self.phoindex+1)
+        return r
