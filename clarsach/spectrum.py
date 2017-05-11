@@ -3,7 +3,7 @@ import numpy as np
 from respond import RMF, ARF
 from astropy.io import fits
 
-ALLOWED_UNITS = ['kev','angs']
+ALLOWED_UNITS = ['keV','angs']
 ALLOWED_TELESCOPE = ['HETG','ACIS']
 
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
@@ -26,7 +26,7 @@ class XSpectrum(object):
     def bin_mid(self):
         return 0.5 * (self.bin_lo + self.bin_hi)
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax, xunit='keV', **kwargs):
         counts_err = np.sqrt(self.counts)
         ax.errorbar(self.bin_mid, self.counts, yerr=counts_err,
                     ls='', marker=None, color='k', capsize=0, alpha=0.5)
@@ -39,7 +39,7 @@ class XSpectrum(object):
         data = ff[1].data
         self.bin_lo = data['BIN_LO']
         self.bin_hi = data['BIN_HI']
-        self.bin_unit = 'kev'
+        self.bin_unit = data.columns['BIN_LO'].unit
         self.counts = data['COUNTS']
         self.rmf_file = ff[1].header['RESPFILE']
         self.arf_file = ff[1].header['ANCRFILE']
