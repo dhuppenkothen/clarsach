@@ -1,0 +1,50 @@
+import numpy as np
+from astropy.io import fits
+
+ALLOWED_UNITS = ['kev','angs']
+ALLOWED_TELESCOPE = ['HETG']
+
+UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
+
+__all__ = ['xSpectrum']
+
+# Not a very smart reader, but it works for HETG
+class xSpectrum(object):
+    def __init__(self, filename, telescope='HETG'):
+        assert telescope in ALLOWED_TELESCOPE
+        if telescope == 'HETG':
+            self._read_hetg(filename)
+            self.notice = np.ones(len(self.counts), dtype=bool)
+            self.group  = np.zeros(len(self.counts), dtype=int)  # Will need to group some day
+
+    @property
+    def bin_mid(self):
+        return 0.5 * (self.bin_lo + self.bin_hi)
+
+    def plot(self, ax, **kwargs):
+        counts_err = np.sqrt(self.counts)
+        ax.errorbar(self.bin_mid, self.counts, yerr=counts_err,
+                    ls='', marker=None, color='k', capsize=0, alpha=0.5)
+        ax.step(self.bin_lo, self.counts, where='post', **kwargs)
+        ax.set_xlabel(UNIT_LABELS[self.bin_unit])
+        ax.set_ylabel('Counts')
+
+    def _read_hetg(self, filename):
+        ff   = fits.open(filename)
+        data = ff[1].data
+        self.bin_lo = data['BIN_LO']
+        self.bin_hi = data['BIN_HI']
+        self.bin_unit = 'kev'
+        self.counts = data['COUNTS']
+        self.rmf_file = ff[1].header['RESPFILE']
+        self.arf_file = ff[1].header['ANCRFILE']
+
+"""# Maybe some day we will be clever and use subclasses
+class HETGSpectrum(xSpectrum):
+    def __init__(self, filename):
+        super(HETGSpectrum, self).__init__(filename)
+
+class ACISSpectrum(xSpectrum):
+    def __init__(self, filename):
+        super(ACISSpectrum, self).__init__(filename, type='ACIS')
+"""
