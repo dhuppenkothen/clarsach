@@ -202,8 +202,8 @@ class RMF(object):
 
                 # add the flux to the subarray of the counts array that starts with 
                 # counts_idx and runs over current_num_chans channels
-                counts[counts_idx:counts_idx+current_num_chans] +=  self.matrix[resp_idx:resp_idx+current_num_chans] * \
-                                                                  np.float(source_bin_i)
+                counts[counts_idx:counts_idx+current_num_chans] +=  np.sum(self.matrix[resp_idx:resp_idx+current_num_chans] * \
+                                                                  np.float(source_bin_i))
                 # iterate the response index for next round
                 resp_idx += current_num_chans
 
