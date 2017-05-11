@@ -4,7 +4,7 @@ from respond import RMF, ARF
 from astropy.io import fits
 
 ALLOWED_UNITS = ['kev','angs']
-ALLOWED_TELESCOPE = ['HETG']
+ALLOWED_TELESCOPE = ['HETG','ACIS']
 
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
 
@@ -16,8 +16,10 @@ class XSpectrum(object):
         assert telescope in ALLOWED_TELESCOPE
         if telescope == 'HETG':
             self._read_hetg(filename)
-            self.notice = np.ones(len(self.counts), dtype=bool)
-            self.group  = np.zeros(len(self.counts), dtype=int)  # Will need to group some day
+        elif telescope == 'ACIS':
+            self._read_hetg(filename)
+        self.notice = np.ones(len(self.counts), dtype=bool)
+        self.group  = np.zeros(len(self.counts), dtype=int)  # Will need to group some day
 
     @property
     def bin_mid(self):
