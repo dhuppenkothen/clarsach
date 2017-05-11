@@ -8,10 +8,10 @@ ALLOWED_TELESCOPE = ['HETG']
 
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
 
-__all__ = ['xSpectrum']
+__all__ = ['XSpectrum']
 
 # Not a very smart reader, but it works for HETG
-class xSpectrum(object):
+class XSpectrum(object):
     def __init__(self, filename, telescope='HETG'):
         assert telescope in ALLOWED_TELESCOPE
         if telescope == 'HETG':
@@ -40,8 +40,8 @@ class xSpectrum(object):
         self.counts = data['COUNTS']
         self.rmf_file = ff[1].header['RESPFILE']
         self.arf_file = ff[1].header['ANCRFILE']
-        #self.rmf = RMF("../clarsach/data/%s" % self.rmf_file)
-        #self.arf = ARF("../clarsach/data/%s" % self.rmf_file)
+        self.rmf = RMF("../clarsach/data/%s" % self.rmf_file)
+        self.arf = ARF("../clarsach/data/%s" % self.arf_file)
 
 """# Maybe some day we will be clever and use subclasses
 class HETGSpectrum(xSpectrum):
