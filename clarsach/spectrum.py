@@ -15,11 +15,12 @@ class XSpectrum(object):
     def __init__(self, filename, telescope='HETG'):
         assert telescope in ALLOWED_TELESCOPE
         if telescope == 'HETG':
-            self._read_hetg(filename)
+            self._read_chandra(filename)
         elif telescope == 'ACIS':
-            self._read_hetg(filename)
-        self.notice = np.ones(len(self.counts), dtype=bool)
-        self.group  = np.zeros(len(self.counts), dtype=int)  # Will need to group some day
+            self._read_chandra(filename)
+        # Might need to notice or group some day
+        #self.notice = np.ones(len(self.counts), dtype=bool)
+        #self.group  = np.zeros(len(self.counts), dtype=int)
 
     @property
     def bin_mid(self):
@@ -33,7 +34,7 @@ class XSpectrum(object):
         ax.set_xlabel(UNIT_LABELS[self.bin_unit])
         ax.set_ylabel('Counts')
 
-    def _read_hetg(self, filename):
+    def _read_chandra(self, filename):
         ff   = fits.open(filename)
         data = ff[1].data
         self.bin_lo = data['BIN_LO']
@@ -44,13 +45,3 @@ class XSpectrum(object):
         self.arf_file = ff[1].header['ANCRFILE']
         self.rmf = RMF("../clarsach/data/%s" % self.rmf_file)
         self.arf = ARF("../clarsach/data/%s" % self.arf_file)
-
-"""# Maybe some day we will be clever and use subclasses
-class HETGSpectrum(xSpectrum):
-    def __init__(self, filename):
-        super(HETGSpectrum, self).__init__(filename)
-
-class ACISSpectrum(xSpectrum):
-    def __init__(self, filename):
-        super(ACISSpectrum, self).__init__(filename, type='ACIS')
-"""
