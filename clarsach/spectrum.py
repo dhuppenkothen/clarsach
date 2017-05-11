@@ -1,4 +1,6 @@
 import numpy as np
+
+from respond import RMF, ARF
 from astropy.io import fits
 
 ALLOWED_UNITS = ['kev','angs']
@@ -38,6 +40,8 @@ class xSpectrum(object):
         self.counts = data['COUNTS']
         self.rmf_file = ff[1].header['RESPFILE']
         self.arf_file = ff[1].header['ANCRFILE']
+        #self.rmf = RMF("../clarsach/data/%s" % self.rmf_file)
+        #self.arf = ARF("../clarsach/data/%s" % self.rmf_file)
 
 """# Maybe some day we will be clever and use subclasses
 class HETGSpectrum(xSpectrum):
