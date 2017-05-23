@@ -4,7 +4,7 @@ import os
 from respond import RMF, ARF
 from astropy.io import fits
 
-ALLOWED_UNITS      = ['keV','angs']
+ALLOWED_UNITS      = ['keV','angs','angstrom','kev']
 ALLOWED_TELESCOPES = ['HETG','ACIS']
 
 CONST_HC    = 12.398418573430595   # Copied from ISIS, [keV angs]
@@ -46,6 +46,13 @@ class XSpectrum(object):
             new_cts = self.counts[::-1]
             return (new_lo, new_hi, new_mid, new_cts)
 
+    def hard_set_units(self, unit):
+        new_lo, new_hi, new_mid, new_cts = self._change_units(unit)
+        self.bin_lo = new_lo
+        self.bin_hi = new_hi
+        self.counts = new_cts
+        self.bin_unit = unit
+
     def plot(self, ax, xunit='keV', **kwargs):
         lo, hi, mid, cts = self._change_units(xunit)
         counts_err       = np.sqrt(cts)
@@ -66,4 +73,4 @@ class XSpectrum(object):
         self.rmf_file = ff[1].header['RESPFILE']
         self.arf_file = ff[1].header['ANCRFILE']
         self.rmf = RMF(this_dir + "/" + self.rmf_file)
-        self.arf = ARF(this_dir + "/" +  self.arf_file)
+        self.arf = ARF(this_dir + "/" + self.arf_file)
