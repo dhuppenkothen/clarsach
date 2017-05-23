@@ -35,15 +35,23 @@ class XSpectrum(object):
     def bin_mid(self):
         return 0.5 * (self.bin_lo + self.bin_hi)
 
+    @property
+    def is_monotonically_increasing(self):
+        return all(self.bin_lo[1:] > self.bin_lo[:-1])
+
     def _change_units(self, unit):
         assert unit in ALLOWED_UNITS
         if unit == self.bin_unit:
             return (self.bin_lo, self.bin_hi, self.bin_mid, self.counts)
         else:
-            new_lo  = CONST_HC/self.bin_hi[::-1]
-            new_hi  = CONST_HC/self.bin_lo[::-1]
+            if self.is_monotonically_increasing:
+                sl  = slice(None, None, -1)
+            else:
+                sl  = slice(None, None, 1)
+            new_lo  = CONST_HC/self.bin_hi[sl]
+            new_hi  = CONST_HC/self.bin_lo[sl]
             new_mid = 0.5 * (new_lo + new_hi)
-            new_cts = self.counts[::-1]
+            new_cts = self.counts[sl]
             return (new_lo, new_hi, new_mid, new_cts)
 
     def hard_set_units(self, unit):
