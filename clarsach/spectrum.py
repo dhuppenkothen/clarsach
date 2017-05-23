@@ -82,3 +82,5 @@ class XSpectrum(object):
         self.arf_file = this_dir + "/" + ff[1].header['ANCRFILE']
         self.rmf = RMF(self.rmf_file)
         self.arf = ARF(self.arf_file)
+        self.exposure = ff[1].header['EXPOSURE']  # seconds
+        ff.close()
