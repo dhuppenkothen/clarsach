@@ -70,7 +70,7 @@ class XSpectrum(object):
         self.bin_hi   = data['BIN_HI']
         self.bin_unit = data.columns['BIN_LO'].unit
         self.counts   = data['COUNTS']
-        self.rmf_file = ff[1].header['RESPFILE']
-        self.arf_file = ff[1].header['ANCRFILE']
-        self.rmf = RMF(this_dir + "/" + self.rmf_file)
-        self.arf = ARF(this_dir + "/" + self.arf_file)
+        self.rmf_file = this_dir + "/" + ff[1].header['RESPFILE']
+        self.arf_file = this_dir + "/" + ff[1].header['ANCRFILE']
+        self.rmf = RMF(self.rmf_file)
+        self.arf = ARF(self.arf_file)
