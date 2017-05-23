@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 from respond import RMF, ARF
 from astropy.io import fits
@@ -55,6 +56,7 @@ class XSpectrum(object):
         ax.set_ylabel('Counts')
 
     def _read_chandra(self, filename):
+        this_dir = os.path.dirname(os.path.abspath(filename))
         ff   = fits.open(filename)
         data = ff[1].data
         self.bin_lo   = data['BIN_LO']
@@ -63,5 +65,5 @@ class XSpectrum(object):
         self.counts   = data['COUNTS']
         self.rmf_file = ff[1].header['RESPFILE']
         self.arf_file = ff[1].header['ANCRFILE']
-        self.rmf = RMF("../clarsach/data/%s" % self.rmf_file)
-        self.arf = ARF("../clarsach/data/%s" % self.arf_file)
+        self.rmf = RMF(this_dir + "/" + self.rmf_file)
+        self.arf = ARF(this_dir + "/" +  self.arf_file)
