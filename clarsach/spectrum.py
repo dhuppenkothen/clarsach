@@ -41,6 +41,11 @@ class XSpectrum(object):
         result = self.rmf.apply_rmf(mrate)  # counts per bin
         return result
 
+    def __store_path(self, filename):
+        self.path = '/'.join(filename.split('/')[0:-1]) + "/"
+
+        return
+
     @property
     def bin_mid(self):
         return 0.5 * (self.bin_lo + self.bin_hi)
@@ -93,6 +98,7 @@ class XSpectrum(object):
         self.bin_hi   = data['BIN_HI']
         self.bin_unit = data.columns['BIN_LO'].unit
         self.counts   = data['COUNTS']
+
         self.rmf_file = this_dir + "/" + ff[1].header['RESPFILE']
         self.arf_file = this_dir + "/" + ff[1].header['ANCRFILE']
         self.rmf = RMF(self.rmf_file)
