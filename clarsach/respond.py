@@ -83,7 +83,7 @@ class RMF(object):
 
         # flatten the variable-length arrays
         self.n_grp, self.f_chan, self.n_chan, self.matrix = \
-                self.__flatten_arrays(n_grp, f_chan, n_chan, matrix)
+                self._flatten_arrays(n_grp, f_chan, n_chan, matrix)
 
         return
 
@@ -117,7 +117,7 @@ class RMF(object):
 
         return tlmin
 
-    def __flatten_arrays(self, n_grp, f_chan, n_chan, matrix):
+    def _flatten_arrays(self, n_grp, f_chan, n_chan, matrix):
 
         # find all non-zero groups
         nz_idx = (n_grp > 0)
