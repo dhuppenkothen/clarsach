@@ -66,3 +66,61 @@ class TestChandraHETGIntegration(object):
         m_rmf_c = rmf_c.apply_rmf(m_arf_c*1.e5)
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
+
+class TestRXTEPCAIntegration(object):
+
+    @classmethod
+    def setup_class(cls):
+
+        cls.rmffile =  "data/PCU2.rsp"
+        cls.sherpa_rmf_file = "data/rxte_pca_m_rmf.txt"
+
+        rmf_list = fits.open(cls.rmffile)
+        cls.sherpa_rmf = np.loadtxt(cls.sherpa_rmf_file)[:,1]
+
+        cls.energ_lo = rmf_list[1].data.field("ENERG_LO")
+        cls.energ_hi = rmf_list[1].data.field("ENERG_HI")
+
+        rmf_list.close()
+
+        cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
+        cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
+
+
+    def test_clarsach_rmf(self):
+        rmf_c = RMF(self.rmffile)
+
+        m_rmf_c = rmf_c.apply_rmf(self.m)
+
+        assert np.allclose(self.sherpa_rmf, m_rmf_c)
+
+class TestRXTEHEXTEIntegration(object):
+
+    @classmethod
+    def setup_class(cls):
+
+        cls.arffile = "data/rxte_hexte_00may26_pwa.arf"
+        cls.rmffile =  "data/rxte_hexte_97mar20c_pwa.rmf"
+        cls.sherpa_rmf_file = "data/rxte_hexte_m_rmf.txt"
+
+        arf_list = fits.open(cls.arffile)
+        cls.sherpa_rmf = np.loadtxt(cls.sherpa_rmf_file)[:,1]
+
+        cls.energ_lo = arf_list[1].data.field("ENERG_LO")
+        cls.energ_hi = arf_list[1].data.field("ENERG_HI")
+
+        arf_list.close()
+
+        cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
+        cls.m = cls.pl.calculate(ener_lo=cls.energ_lo,
+                                 ener_hi=cls.energ_hi)
+
+
+    def test_clarsach_rmf(self):
+        arf_c = ARF(self.arffile)
+        rmf_c = RMF(self.rmffile)
+
+        m_arf_c = arf_c.apply_arf(self.m)
+        m_rmf_c = rmf_c.apply_rmf(m_arf_c)
+
+        assert np.allclose(self.sherpa_rmf, m_rmf_c)
