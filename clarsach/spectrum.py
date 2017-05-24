@@ -16,6 +16,9 @@ __all__ = ['XSpectrum']
 class XSpectrum(object):
     def __init__(self, filename, telescope='HETG'):
         assert telescope in ALLOWED_TELESCOPES
+
+        self.__store_path(filename)
+
         if telescope == 'HETG':
             self._read_chandra(filename)
         elif telescope == 'ACIS':
@@ -27,9 +30,16 @@ class XSpectrum(object):
         if self.bin_unit != self.rmf.energ_unit:
             print("Warning: RMF units and pha file units are not the same!!!")
 
+
         # Might need to notice or group some day
         #self.notice = np.ones(len(self.counts), dtype=bool)
         #self.group  = np.zeros(len(self.counts), dtype=int)
+
+
+    def __store_path(self, filename):
+        self.path = '/'.join(filename.split('/')[0:-1]) + "/"
+
+        return
 
     @property
     def bin_mid(self):
@@ -78,6 +88,7 @@ class XSpectrum(object):
         self.bin_hi   = data['BIN_HI']
         self.bin_unit = data.columns['BIN_LO'].unit
         self.counts   = data['COUNTS']
+
         self.rmf_file = this_dir + "/" + ff[1].header['RESPFILE']
         self.arf_file = this_dir + "/" + ff[1].header['ANCRFILE']
         self.rmf = RMF(self.rmf_file)

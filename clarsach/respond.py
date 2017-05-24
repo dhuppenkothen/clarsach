@@ -119,6 +119,9 @@ class RMF(object):
 
     def _flatten_arrays(self, n_grp, f_chan, n_chan, matrix):
 
+        if not len(n_grp) == len(f_chan) == len(n_chan) == len(matrix):
+            raise ValueError("Arrays must be of same length!")
+
         # find all non-zero groups
         nz_idx = (n_grp > 0)
 
@@ -128,6 +131,11 @@ class RMF(object):
         # stack all nonzero rows in n_chan and f_chan
         n_chan_flat = np.hstack(n_chan[nz_idx])
         f_chan_flat = np.hstack(f_chan[nz_idx])
+
+        # if n_chan is zero, we'll remove those as well.
+        nz_idx2 = (n_chan_flat > 0)
+        n_chan_flat = n_chan_flat[nz_idx2]
+        f_chan_flat = f_chan_flat[nz_idx2]
 
         return n_grp, f_chan_flat, n_chan_flat, matrix_flat
 
@@ -171,9 +179,11 @@ class RMF(object):
             counts/s/channel
 
         """
+        # get the number of channels in the data
+        nchannels = spec.shape[0]
 
         # an empty array for the output counts
-        counts = np.zeros(self.detchans)
+        counts = np.zeros(nchannels)
 
         # index for n_chan and f_chan incrementation
         k = 0
@@ -182,7 +192,8 @@ class RMF(object):
         resp_idx = 0
 
         # loop over all channels
-        for i in range(self.detchans):
+        for i in range(nchannels):
+
             # this is the current bin in the flux spectrum to
             # be folded
             source_bin_i = spec[i]
@@ -192,23 +203,27 @@ class RMF(object):
 
             # loop over the current number of groups
             for j in range(current_num_groups):
-
                 # get the right index for the start of the counts array
                 # to put the data into
                 counts_idx = int(self.f_chan[k] - self.offset)
+
                 # this is the current number of channels to use
                 current_num_chans = int(self.n_chan[k])
+
                 # iterate k for next round
                 k += 1
 
                 # add the flux to the subarray of the counts array that starts with
                 # counts_idx and runs over current_num_chans channels
-                counts[counts_idx:counts_idx+current_num_chans] +=  np.sum(self.matrix[resp_idx:resp_idx+current_num_chans] * \
-                                                                  np.float(source_bin_i))
+                counts[counts_idx:counts_idx + current_num_chans] += self.matrix[
+                                                              resp_idx:resp_idx + current_num_chans] * \
+                                                              np.float(
+                                                                  source_bin_i)
                 # iterate the response index for next round
                 resp_idx += current_num_chans
 
         return counts
+
 
 class ARF(object):
 
