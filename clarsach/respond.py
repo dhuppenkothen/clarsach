@@ -246,6 +246,11 @@ class ARF(object):
         self.e_unit = data.columns["ENERG_LO"].unit
         self.specresp = np.array(data.field("SPECRESP"))
 
+        if "FRACEXPO" in data.columns.names:
+            self.fracexpo = data["FRACEXPO"]
+        else:
+            self.fracexpo = 1.0
+
         return
 
     def apply_arf(self, spec):
