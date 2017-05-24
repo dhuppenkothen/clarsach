@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-from respond import RMF, ARF
+from clarsach.respond import RMF, ARF
 from astropy.io import fits
 
 ALLOWED_UNITS      = ['keV','angs','angstrom','kev']
