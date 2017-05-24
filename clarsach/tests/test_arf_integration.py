@@ -58,9 +58,6 @@ class TestChandraHETGIntegration(object):
         arf_c = ARF(self.arffile)
         m_arf_c = arf_c.apply_arf(self.m)
 
-        print("sherpa arf: " + str(self.sherpa_arf[-10:]))
-        print("Clarsach arf: " + str(m_arf_c[-10:]*1e5))
-
         assert np.allclose(self.sherpa_arf, m_arf_c*1e5)
 
 
