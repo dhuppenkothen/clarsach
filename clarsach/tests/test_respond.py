@@ -9,7 +9,7 @@ class TestRMF(object):
 
     @classmethod
     def setup_class(cls):
-        cls.filename = "../../data/PCU2.rsp"
+        cls.filename = "data/PCU2.rsp"
         cls.rmf =  RMF(cls.filename)
 
         cls.h = fits.open(cls.filename)
@@ -31,19 +31,17 @@ class TestRMF(object):
         assert hasattr(self.rmf, "matrix")
         assert hasattr(self.rmf, "n_chan")
 
-    @pytest.raises(Exception)
     def test_failure_when_arrays_are_not_the_same_length(self):
-        self.rmf.__flatten_arrays(self.rmf.n_grp,
-                                  self.rmf.f_chan,
-                                  self.rmf.n_chan[:-1],
-                                  self.rmf.matrix)
+        rmf =  RMF(self.filename)
+
+        with pytest.raises(ValueError):
+            _, _, _, _ = rmf._flatten_arrays(rmf.n_grp,
+                                 rmf.f_chan,
+                                 rmf.n_chan[:-1],
+                                 rmf.matrix)
 
     def test_n_grp_has_no_zeros(self):
         assert np.all(self.rmf.n_grp > 0)
 
     def test_n_chan_has_no_zeros(self):
         assert np.all(self.rmf.n_chan > 0)
-
-    def test_f_chan_has_no_zeros(self):
-        assert np.all(self.rmf.f_chan > 0)
-
