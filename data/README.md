@@ -3,6 +3,9 @@ Test Data For Clarsach
 
 This directory should contain test data for `clarsach`. It is likely that we will make the test data available separately in order to not blow up the repo size too much, so look for a link here in the future!
 
+This unofficially also acts as a list of instruments for which we have tested the response code where it works as expected (note: our integration tests use `sherpa` for comparison and assume their response calculations to be correct).
+We will happily test other instruments assuming someone gives us test data!
+
 For now, this contains a record of all necessary files. All test data files are simulated from a power law spectrum with a normalization of 1 and a power law index of 2. No absorption or any other effect is applied, aside from the respective responses.
 
 For details on both the models and how sherpa was used to build the models used for the integration tests, see the respective notebooks in the `notebooks` folder.
@@ -25,13 +28,18 @@ Chandra/HETG
  
 RXTE/PCA
 --------
-
-
+* `RXTE_PCA_EVT_PCU2.fak`: fake RXTE/PCA spectrum
+* `PCU2.rsp`: RXTE/PCA Response (note: RXTE/PCA has no ARF, just a combined response)E
+* `rxte_pca_m_rmf.txt`: text file with the model, response applied in `sherpa` 
 
 
 RXTE/HEXTE
 ----------
-
+* `RXTE_HEXTE_ClusterA.fak`: fake RXTE/HEXTE spectrum
+* `rxte_hexte_00may26_pwa.arf`: RXTE/HEXTE ARF
+* `rxte_hexte_97mar20c_pwa.rmf`: RXTE/HEXTE RMF
+* `rxte_hexte_m_arf.txt`: text file with model, ARF applied in `sherpa`
+* `rxte_hexte_m_rmf.txt`: text file with model, RMF applied in `sherpa`
 
 eXTP/LAD
 --------
