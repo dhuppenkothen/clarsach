@@ -143,8 +143,12 @@ class RMF(object):
                 n = n_grp[i]
                 f = f_chan[i]
                 nc = n_chan[i]
-                f_chan_new.append(f[:n])
-                n_chan_new.append(nc[:n])
+                if np.size(f) == 1:
+                    f_chan_new.append(f)
+                    n_chan_new.append(nc)
+                else:
+                    f_chan_new.append(f[:n])
+                    n_chan_new.append(nc[:n])
 
         n_chan_flat = np.hstack(n_chan_new)
         f_chan_flat = np.hstack(f_chan_new)
@@ -238,11 +242,10 @@ class RMF(object):
                     k += 1
                     # add the flux to the subarray of the counts array that starts with
                     # counts_idx and runs over current_num_chans channels
-                    counts[
-                    counts_idx:counts_idx + current_num_chans] += self.matrix[
-                                                                  resp_idx:resp_idx + current_num_chans] * \
-                                                                  np.float(
-                                                                      source_bin_i)
+                    counts[counts_idx:counts_idx +
+                                      current_num_chans] += self.matrix[resp_idx:resp_idx +
+                                                                                 current_num_chans] * \
+                                                                np.float(source_bin_i)
                     # iterate the response index for next round
                     resp_idx += current_num_chans
 
