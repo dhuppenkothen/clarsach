@@ -29,7 +29,7 @@ Chandra/HETG
 RXTE/PCA
 --------
 * `RXTE_PCA_EVT_PCU2.fak`: fake RXTE/PCA spectrum
-* `PCU2.rsp`: RXTE/PCA Response (note: RXTE/PCA has no ARF, just a combined response)E
+* `PCU2.rsp`: RXTE/PCA Response (note: RXTE/PCA has no ARF, just a combined response)
 * `rxte_pca_m_rmf.txt`: text file with the model, response applied in `sherpa` 
 
 
@@ -43,14 +43,21 @@ RXTE/HEXTE
 
 eXTP/LAD
 --------
-
+* `eXTP_LAD.fak`: fake eXTP/LAD spectrum
+* `LAD_40mod_200eV_rbn.rsp`: eXTP/LAD response (note: eXTP/LAD only has a combined response)
+* `extp_lad_m_rmf.txt`: text file with model, response applied in `sherpa`
 
 eXTP/SFA
 --------
+* `eXTP_SFA.fak`: fake eXTP/SFA spectrum
+* `XTP_sfa_withSDD_rbn.rsp`: eXTP/SFA response (note: eXTP/SFA only has a combined response)
+* `extp_sfa_m_rmf.txt`: text file with model, response applied in `sherpa` 
 
 NICER
 -----
-
+* `NICER.fak`: fake NICER spectrum
+* `NICER_May2014_rbn.rsp`: NICER response (note: NICER only has a combined response)
+* 
 
 Athena/X-IFU
 ------------
