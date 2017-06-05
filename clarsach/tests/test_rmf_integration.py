@@ -179,3 +179,31 @@ class TestEXTPSFAIntegration(object):
         m_rmf_c = rmf_c.apply_rmf(self.m)
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
+
+
+class TestNICERIntegration(object):
+
+    @classmethod
+    def setup_class(cls):
+
+        cls.rmffile =  "data/NICER_May2014_rbn.rsp"
+        cls.sherpa_rmf_file = "data/nicer_m_rmf.txt"
+
+        rmf_list = fits.open(cls.rmffile)
+        cls.sherpa_rmf = np.loadtxt(cls.sherpa_rmf_file)[:,1]
+
+        cls.energ_lo = rmf_list["SPECRESP MATRIX"].data.field("ENERG_LO")
+        cls.energ_hi = rmf_list["SPECRESP MATRIX"].data.field("ENERG_HI")
+
+        rmf_list.close()
+
+        cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
+        cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
+
+
+    def test_clarsach_rmf(self):
+        rmf_c = RMF("data/NICER_May2014_rbn.rsp")
+
+        m_rmf_c = rmf_c.apply_rmf(self.m)
+
+        assert np.allclose(self.sherpa_rmf, m_rmf_c)

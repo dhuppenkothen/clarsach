@@ -57,7 +57,7 @@ NICER
 -----
 * `NICER.fak`: fake NICER spectrum
 * `NICER_May2014_rbn.rsp`: NICER response (note: NICER only has a combined response)
-* 
+* `nicer_m_rmf.txt`: text file with model, response applied in `sherpa` 
 
 Athena/X-IFU
 ------------
