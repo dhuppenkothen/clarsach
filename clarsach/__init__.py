@@ -1,4 +1,5 @@
-#from clarsach.io import *
-from clarsach.respond import RMF, ARF
-from clarsach.spectrum import XSpectrum
-from clarsach.models import *
+#!/usr/bin/env python
+'''Clarsach'''
+from . import spectrum
+from .respond import RMF, ARF
+from .models import *

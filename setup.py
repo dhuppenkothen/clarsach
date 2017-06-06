@@ -5,7 +5,7 @@ import imp
 version = imp.load_source('clarsach.version', 'clarsach/version.py')
 
 setup(
-    name='entrofy',
+    name='clarsach',
     version=version.version,
     description='Clarsach',
     author='Daniela Huppenkothen',

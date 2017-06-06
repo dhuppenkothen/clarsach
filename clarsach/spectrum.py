@@ -4,13 +4,13 @@ import os
 from clarsach.respond import RMF, ARF
 from astropy.io import fits
 
+__all__ = ['XSpectrum']
+
 ALLOWED_UNITS      = ['keV','angs','angstrom','kev']
 ALLOWED_TELESCOPES = ['HETG','ACIS']
 
 CONST_HC    = 12.398418573430595   # Copied from ISIS, [keV angs]
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
-
-__all__ = ['XSpectrum']
 
 # Not a very smart reader, but it works for HETG
 class XSpectrum(object):
