@@ -9,5 +9,5 @@ all of which come with a lot of overhead.
 Here, we attempt to separate out and simplify the response calculation in 
 sherpa for ease of use with any other (user-written) code. 
 
-Copyright © 2017 Daniela Huppenkothen 
+Copyright © 2017 the authors 
 
