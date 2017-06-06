@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 import imp
 
-version = imp.load_source('entrofy.version', 'entrofy/version.py')
+version = imp.load_source('clarsach.version', 'clarsach/version.py')
 
 setup(
     name='entrofy',
