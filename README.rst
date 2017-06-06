@@ -1,6 +1,12 @@
 Clàrsach: Lightweight response matrix calculations in Python
 ==================================================
 
++------------------+-------------------------+---------------------------+
+| Master           | |Build Status Master|   | |Coverage Status Master|  |
++------------------+-------------------------+---------------------------+
+
+
+
 The analysis of X-ray spectra often depends on the correct 
 usage of instrument response files. However, these calculations 
 are exclusively implemented in one of the three X-ray packages, 
