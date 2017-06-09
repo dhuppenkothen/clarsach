@@ -14,8 +14,6 @@ all of which come with a lot of overhead.
 Here, we attempt to separate out and simplify the response calculation in 
 sherpa for ease of use with any other (user-written) code. 
 
-Copyright © 2017 the authors 
-
 Installing Clàrsach
 -------------------
 
@@ -72,8 +70,18 @@ create and do the following:::
 This should install Clàrsach on your system. Please note that your permissions 
 might require you to use ``sudo`` in order to install the package.
 
+Copyright
+---------
+All content copyright © 2017 the authors. The code is distributed under a GPL licence.
+
+
 Contact
 -------
-
-If you find bugs, or have suggestions or comments, please feel free to contact us through 
+Pull requests are welcome! If you are interested in the further development of
+this project, if you find bugs, or have suggestions or comments, please feel free to contact us through 
 the `issues <https://github.com/dhuppenkothen/clarsach/issues>`_.
+
+
+
+.. |Build Status Master| image:: https://travis-ci.org/dhuppenkothen/clarsach.svg?branch=master
+
