@@ -11,7 +11,7 @@ conda_create ()
     conda update -q conda
     conda config --add channels pypi
     conda info -a
-    deps='coverage pip numpy astropy pytest pytest-cov'
+    deps='coverage pip numpy astropy pytest pytest-cov python-coveralls'
 
     conda create -q -n $ENV_NAME "python=$TRAVIS_PYTHON_VERSION" $deps
 }
