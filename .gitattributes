@@ -3,3 +3,4 @@ data/fake_heg_p1.pha filter=lfs diff=lfs merge=lfs -text
 data/fake_heg_m1.pha filter=lfs diff=lfs merge=lfs -text
 data/fake_meg_m1.pha filter=lfs diff=lfs merge=lfs -text
 data/fake_meg_p1.pha filter=lfs diff=lfs merge=lfs -text
+data/fake_acis.pha filter=lfs diff=lfs merge=lfs -text
