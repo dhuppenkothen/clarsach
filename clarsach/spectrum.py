@@ -30,16 +30,16 @@ class XSpectrum(object):
         if self.bin_unit != self.rmf.energ_unit:
             print("Warning: RMF units and pha file units are not the same!!!")
 
-
-        # Might need to notice or group some day
-        #self.notice = np.ones(len(self.counts), dtype=bool)
-        #self.group  = np.zeros(len(self.counts), dtype=int)
-
-
     def __store_path(self, filename):
         self.path = '/'.join(filename.split('/')[0:-1]) + "/"
-
         return
+
+    def apply_resp(self, mflux):
+        # Given a model flux spectrum, apply the response
+        mrate  = self.arf.apply_arf(mflux)  # phot/s per bin?
+        result = self.rmf.apply_rmf(mrate)  # count/s per bin?
+        result *= self.exposure * self.arf.fracexpo  # counts per bin
+        return result
 
     @property
     def bin_mid(self):
