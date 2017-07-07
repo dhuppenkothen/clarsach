@@ -54,10 +54,15 @@ class XSpectrum(object):
         if unit == self.bin_unit:
             return (self.bin_lo, self.bin_hi, self.bin_mid, self.counts)
         else:
+            # Need to use reverse values if the bins are listed in increasing order
             if self.is_monotonically_increasing:
                 sl  = slice(None, None, -1)
+                print("is monotonically increasing")
+            # Sometimes its listed in reverse angstrom values (to match energies),
+            # in which case, no need to reverse
             else:
                 sl  = slice(None, None, 1)
+                print("is NOT monotonically increasing")
             new_lo  = CONST_HC/self.bin_hi[sl]
             new_hi  = CONST_HC/self.bin_lo[sl]
             new_mid = 0.5 * (new_lo + new_hi)
