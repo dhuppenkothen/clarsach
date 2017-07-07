@@ -1,0 +1,8 @@
+data/LAD_40mod_200eV_rbn.rsp filter=lfs diff=lfs merge=lfs -text
+data/fake_heg_p1.pha filter=lfs diff=lfs merge=lfs -text
+data/fake_heg_m1.pha filter=lfs diff=lfs merge=lfs -text
+data/fake_meg_m1.pha filter=lfs diff=lfs merge=lfs -text
+data/fake_meg_p1.pha filter=lfs diff=lfs merge=lfs -text
+data/fake_acis.pha filter=lfs diff=lfs merge=lfs -text
+data/aciss_hetg0_cy19.rmf filter=lfs diff=lfs merge=lfs -text
+data/arfs/aciss_hetg0_cy19.arf filter=lfs diff=lfs merge=lfs -text
