@@ -12,8 +12,56 @@ UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
 
 __all__ = ['XSpectrum']
 
+def calculate_flux_spectrum(spec, counts=None):
+    """
+    Convert a spectrum from units of photon counts to
+    units of photon flux.
+
+    **Warning**: You should do this for plotting *only*.
+    Converting from flux to counts, as is done in the detector,
+    involves a convolution with the response matrix of the detector.
+    Deconvolving this correctly is very hard, and not done in this
+    function. This is for visualization purposes only!
+
+    Parameters
+    ----------
+    spec : clarsach.XSpectrum object
+        An XSpectrum object containing the X-ray spectrum
+
+    counts : iterable
+        An array with counts to be converted to the flux
+        If this is None, use the `counts` attribute of the `spec`
+        object.
+
+    Returns
+    -------
+    flux_spectrum:
+        The flux spectrum
+
+    """
+
+    # make a flat spectrum so that I can integrate
+    # ARF and RMF only
+    flat_model = np.ones_like(spec.counts) * (spec.rmf.energ_hi -
+                                              spec.rmf.energ_lo)
+
+    # now apply ARF to the flat model
+    m_arf = spec.arf.apply_arf(flat_model)
+
+    # apply RMF to the flat model
+    m_rmf = spec.rmf.apply_rmf(m_arf)
+
+    # divide the observed counts by the flat model with the ARF/RMF applied
+    if counts is None:
+        flux_spec = spec.counts / m_rmf / spec.exposure
+    else:
+        flux_spec = counts / m_rmf / spec.exposure
+
+    return flux_spec
+
 # Not a very smart reader, but it works for HETG
 class XSpectrum(object):
+
     def __init__(self, filename, telescope='HETG'):
         assert telescope in ALLOWED_TELESCOPES
 
@@ -94,3 +142,5 @@ class XSpectrum(object):
         self.arf = ARF(self.arf_file)
         self.exposure = ff[1].header['EXPOSURE']  # seconds
         ff.close()
+
+        self.flux = calculate_flux_spectrum(self, None)

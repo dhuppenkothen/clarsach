@@ -7,6 +7,7 @@ from clarsach.spectrum import XSpectrum
                          ('HETG',"data/fake_meg_m1.pha"),
                          ('HETG',"data/fake_meg_p1.pha"),
                          ('ACIS',"data/fake_acis.pha")])
+
 def test_load_xspectrum(ttype, filename):
     test = XSpectrum(filename, telescope=ttype)
     assert isinstance(test, XSpectrum)
