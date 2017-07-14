@@ -4,15 +4,13 @@ import os
 from clarsach.respond import RMF, ARF
 from astropy.io import fits
 
-__all__ = ['XSpectrum']
+__all__ = ['XSpectrum', 'calculate_flux_spectrum']
 
 ALLOWED_UNITS      = ['keV','angs','angstrom','kev']
 ALLOWED_TELESCOPES = ['HETG','ACIS']
 
 CONST_HC    = 12.398418573430595   # Copied from ISIS, [keV angs]
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
-
-__all__ = ['XSpectrum']
 
 def calculate_flux_spectrum(spec, counts=None):
     """
@@ -145,14 +143,24 @@ class XSpectrum(object):
         self.counts = new_cts
         self.bin_unit = unit
 
-    def plot(self, ax, xunit='keV', **kwargs):
+    def plot(self, ax, xunit='keV', yunit="counts", **kwargs):
         lo, hi, mid, cts = self._change_units(xunit)
-        counts_err       = np.sqrt(cts)
-        ax.errorbar(mid, cts, yerr=counts_err,
-                    ls='', marker=None, color='k', capsize=0, alpha=0.5)
-        ax.step(lo, cts, where='post', **kwargs)
+        counts_err = np.sqrt(cts)
+        if yunit == "counts":
+            ax.errorbar(mid, cts, yerr=counts_err,
+                        ls='', marker=None, color='k', capsize=0, alpha=0.5)
+            ax.set_ylabel('Counts')
+            ax.step(lo, cts, where='post', **kwargs)
+
+        elif yunit == "flux":
+            flux = calculate_flux_spectrum(self)
+            flux_err = calculate_flux_spectrum(self, counts_err)
+            ax.errorbar(mid, flux, yerr=flux_err,
+                        ls='', marker=None, color='k', capsize=0, alpha=0.5)
+            ax.set_ylabel('Flux')
+            ax.step(lo, flux, where='post', **kwargs)
+
         ax.set_xlabel(UNIT_LABELS[xunit])
-        ax.set_ylabel('Counts')
 
     def _read_chandra(self, filename):
         this_dir = os.path.dirname(os.path.abspath(filename))

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
 '''Clarsach'''
-from . import spectrum
+from .spectrum import XSpectrum, calculate_flux_spectrum
 from .respond import RMF, ARF
-from .models import *
+from .models import Powerlaw
