@@ -283,6 +283,12 @@ class ARF(object):
         spec : numpy.ndarray
             The (model) spectrum to be folded
 
+        apply_exp : bool, default True
+            If True, apply the exposure time to the ARF-corrected spectrum
+
+        apply_fracexp : bool, default True:
+            If True, apply the fractional exposure to the ARF-corrected spectrum
+
         Returns
         -------
         s_arf : numpy.ndarray
@@ -294,4 +300,11 @@ class ARF(object):
                                                       "be of same size as the " \
                                                       "ARF array."
 
-        return np.array(spec) * self.specresp
+        corr_spec = np.array(spec) * self.specresp
+        if apply_exp:
+            corr_spec *= self.exposure
+
+        if apply_fracexp:
+            corr_spec *= self.fracexpo
+
+        return corr_spec

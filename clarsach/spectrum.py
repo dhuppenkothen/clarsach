@@ -40,7 +40,9 @@ def calculate_flux_spectra(spec, counts=None):
                                               spec.rmf.energ_lo)
 
     # apply RMF to the flat model
-    m_rmf = spec.apply_resp(flat_model)
+    m_arf = spec.arf.apply_arf(flat_model, apply_fracexp=False)
+
+    m_rmf = spec.rmf.apply_rmf(m_arf)
 
     # divide the observed counts by the flat model with the ARF/RMF applied
     if counts is None:
@@ -53,15 +55,15 @@ def calculate_flux_spectra(spec, counts=None):
 
 # Not a very smart reader, but it works for HETG
 class XSpectrum(object):
-    def __init__(self, filename, telescope='HETG'):
+    def __init__(self, filename, telescope='HETG', fix_exposure=False):
         assert telescope in ALLOWED_TELESCOPES
 
         self.__store_path(filename)
 
         if telescope == 'HETG':
-            self._read_chandra(filename)
+            self._read_chandra(filename, fix_exposure)
         elif telescope == 'ACIS':
-            self._read_chandra(filename)
+            self._read_chandra(filename, fix_exposure)
 
         if self.bin_unit != self.arf.e_unit:
             print("Warning: ARF units and pha file units are not the same!!!")
@@ -76,7 +78,6 @@ class XSpectrum(object):
     def apply_resp(self, mflux):
         # Given a model flux spectrum, apply the response
         mrate  = self.arf.apply_arf(mflux)  # phot/s per bin
-        mrate  *= self.exposure # * self.arf.fracexpo  # phot per bin
         result = self.rmf.apply_rmf(mrate)  # counts per bin
         return result
 
@@ -124,7 +125,7 @@ class XSpectrum(object):
         ax.set_xlabel(UNIT_LABELS[xunit])
         ax.set_ylabel('Counts')
 
-    def _read_chandra(self, filename):
+    def _read_chandra(self, filename, fix_exposure=False):
         this_dir = os.path.dirname(os.path.abspath(filename))
         ff   = fits.open(filename)
         data = ff[1].data
@@ -137,4 +138,10 @@ class XSpectrum(object):
         self.rmf = RMF(self.rmf_file)
         self.arf = ARF(self.arf_file)
         self.exposure = ff[1].header['EXPOSURE']  # seconds
+        if self.arf.exposure != self.exposure:
+            if not fix_exposure:
+                print("Warning! Exposure in ARF and observation are not the same! \n"
+                      "To fix this, set fix_exposure=True.")
+            else:
+                self.arf.exposure = self.exposure
         ff.close()
