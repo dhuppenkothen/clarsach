@@ -260,6 +260,7 @@ class ARF(object):
         self.e_high = np.array(data.field("ENERG_HI"))
         self.e_unit = data.columns["ENERG_LO"].unit
         self.specresp = np.array(data.field("SPECRESP"))
+        self.exposure = hdr["EXPOSURE"]
 
         if "FRACEXPO" in data.columns.names:
             self.fracexpo = data["FRACEXPO"]
@@ -268,7 +269,7 @@ class ARF(object):
 
         return
 
-    def apply_arf(self, spec):
+    def apply_arf(self, spec, apply_exp=True, apply_frac_exp=True):
         """
         Fold the spectrum through the ARF.
 
@@ -281,6 +282,12 @@ class ARF(object):
         spec : numpy.ndarray
             The (model) spectrum to be folded
 
+        apply_exp : bool, default True
+            If True, apply exposure to ARF-corrected spectrum
+
+        apply_frac_exp : bool, default True
+            If True, apply fractional exposure to ARF-corrected spectrum
+
         Returns
         -------
         s_arf : numpy.ndarray
@@ -292,4 +299,11 @@ class ARF(object):
                                                       "be of same size as the " \
                                                       "ARF array."
 
-        return np.array(spec) * self.specresp
+        spec_corr = np.array(spec) * self.specresp
+
+        if apply_exp:
+            spec_corr *= self.exposure
+        if apply_frac_exp:
+            spec_corr *= self.fracexpo
+
+        return spec_corr

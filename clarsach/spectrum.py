@@ -85,11 +85,30 @@ class XSpectrum(object):
         return
 
     def apply_resp(self, mflux):
-        # Given a model flux spectrum, apply the response
-        mrate  = self.arf.apply_arf(mflux)  # phot/s per bin
-        mrate  *= self.exposure * self.arf.fracexpo  # phot per bin
-        result = self.rmf.apply_rmf(mrate)  # counts per bin
-        return result
+        """
+        Given a model flux spectrum, apply the response, both ARF and RMF.
+
+        Parameters
+        ----------
+        mflux : iterable
+            list or array with the model flux spectrum
+
+        Returns
+        -------
+        m_rmf: numpy.ndarray
+            The counts spectrum with responses applied
+
+        """
+        # For some instruments, the ARF could not exist
+        if self.arf is not None:
+            mrate  = self.arf.apply_arf(mflux, apply_exp=True,
+                                        apply_frac_exp=True)  # phot/s per bin
+        else:
+            mrate = mflux
+
+        m_rmf = self.rmf.apply_rmf(mrate)  # counts per bin
+
+        return m_rmf
 
     @property
     def bin_mid(self):
