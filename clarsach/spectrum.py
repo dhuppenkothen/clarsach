@@ -4,13 +4,52 @@ import os
 from clarsach.respond import RMF, ARF
 from astropy.io import fits
 
-__all__ = ['XSpectrum']
+__all__ = ['XSpectrum', 'calculate_flux_spectra']
 
 ALLOWED_UNITS      = ['keV','angs','angstrom','kev']
 ALLOWED_TELESCOPES = ['HETG','ACIS']
 
 CONST_HC    = 12.398418573430595   # Copied from ISIS, [keV angs]
 UNIT_LABELS = dict(zip(ALLOWED_UNITS, ['Energy (keV)', 'Wavelength (angs)']))
+
+
+def calculate_flux_spectra(spec, counts=None):
+    """
+    Making flux spectra out of a a single data set.
+
+    Parameters
+    ----------
+    spec : clarsach.XSpectrum object
+        An XSpectrum object containing the X-ray spectrum
+
+    counts : iterable
+        An array with counts to be converted to the flux
+        If this is None, use the `counts` attribute of the `spec`
+        object.
+
+    Returns
+    -------
+    flux_spectrum:
+        The flux spectrum
+
+    """
+
+    # make a flat spectrum so that I can integrate
+    # ARF and RMF only
+    flat_model = np.ones_like(spec.counts) * (spec.rmf.energ_hi -
+                                              spec.rmf.energ_lo)
+
+    # apply RMF to the flat model
+    m_rmf = spec.apply_resp(flat_model)
+
+    # divide the observed counts by the flat model with the ARF/RMF applied
+    if counts is None:
+        flux_spec = spec.counts / m_rmf
+    else:
+        flux_spec = counts / m_rmf
+
+    return flux_spec
+
 
 # Not a very smart reader, but it works for HETG
 class XSpectrum(object):
@@ -37,7 +76,7 @@ class XSpectrum(object):
     def apply_resp(self, mflux):
         # Given a model flux spectrum, apply the response
         mrate  = self.arf.apply_arf(mflux)  # phot/s per bin
-        mrate  *= self.exposure * self.arf.fracexpo  # phot per bin
+        mrate  *= self.exposure # * self.arf.fracexpo  # phot per bin
         result = self.rmf.apply_rmf(mrate)  # counts per bin
         return result
 

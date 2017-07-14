@@ -215,7 +215,8 @@ class RMF(object):
 
                 # add the flux to the subarray of the counts array that starts with
                 # counts_idx and runs over current_num_chans channels
-                counts[counts_idx:counts_idx + current_num_chans] += self.matrix[
+                counts[counts_idx:counts_idx +
+                                  current_num_chans] += self.matrix[
                                                               resp_idx:resp_idx + current_num_chans] * \
                                                               np.float(
                                                                   source_bin_i)
@@ -260,6 +261,7 @@ class ARF(object):
         self.e_high = np.array(data.field("ENERG_HI"))
         self.e_unit = data.columns["ENERG_LO"].unit
         self.specresp = np.array(data.field("SPECRESP"))
+        self.exposure = hdr["EXPOSURE"]
 
         if "FRACEXPO" in data.columns.names:
             self.fracexpo = data["FRACEXPO"]
@@ -268,7 +270,7 @@ class ARF(object):
 
         return
 
-    def apply_arf(self, spec):
+    def apply_arf(self, spec, apply_exp=True, apply_fracexp=True):
         """
         Fold the spectrum through the ARF.
 
