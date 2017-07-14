@@ -1,0 +1,10 @@
+*~
+#*
+*.pha
+*.fits
+*.arf
+*.garf
+*.rmf
+*.grmf
+*.gz
+data/tgcat/*

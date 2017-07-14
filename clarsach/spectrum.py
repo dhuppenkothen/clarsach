@@ -30,16 +30,16 @@ class XSpectrum(object):
         if self.bin_unit != self.rmf.energ_unit:
             print("Warning: RMF units and pha file units are not the same!!!")
 
-
-        # Might need to notice or group some day
-        #self.notice = np.ones(len(self.counts), dtype=bool)
-        #self.group  = np.zeros(len(self.counts), dtype=int)
-
-
     def __store_path(self, filename):
         self.path = '/'.join(filename.split('/')[0:-1]) + "/"
-
         return
+
+    def apply_resp(self, mflux):
+        # Given a model flux spectrum, apply the response
+        mrate  = self.arf.apply_arf(mflux)  # phot/s per bin
+        mrate  *= self.exposure * self.arf.fracexpo  # phot per bin
+        result = self.rmf.apply_rmf(mrate)  # counts per bin
+        return result
 
     @property
     def bin_mid(self):
@@ -54,10 +54,15 @@ class XSpectrum(object):
         if unit == self.bin_unit:
             return (self.bin_lo, self.bin_hi, self.bin_mid, self.counts)
         else:
+            # Need to use reverse values if the bins are listed in increasing order
             if self.is_monotonically_increasing:
                 sl  = slice(None, None, -1)
+                print("is monotonically increasing")
+            # Sometimes its listed in reverse angstrom values (to match energies),
+            # in which case, no need to reverse
             else:
                 sl  = slice(None, None, 1)
+                print("is NOT monotonically increasing")
             new_lo  = CONST_HC/self.bin_hi[sl]
             new_hi  = CONST_HC/self.bin_lo[sl]
             new_mid = 0.5 * (new_lo + new_hi)

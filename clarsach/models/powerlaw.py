@@ -44,6 +44,9 @@ class Powerlaw(object):
         # Computes flux spectrum [phot cm^-2 s^-1] for given energy grid
 
         # integral over the power law model
-        r = -self.norm * ener_hi**(-self.phoindex+1) + \
-            self.norm * ener_lo**(-self.phoindex+1)
+        if self.phoindex == 1.0:
+            r = np.log(ener_hi) - np.log(ener_lo)
+        else:
+            r = -self.norm * ener_hi**(-self.phoindex+1) + \
+                self.norm * ener_lo**(-self.phoindex+1)
         return r

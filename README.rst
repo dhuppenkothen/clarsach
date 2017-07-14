@@ -85,3 +85,8 @@ the `issues <https://github.com/dhuppenkothen/clarsach/issues>`_.
 
 .. |Build Status Master| image:: https://travis-ci.org/dhuppenkothen/clarsach.svg?branch=master
 
+Example data for testing the functionality of Clarsach can be obtained via the following public link:
+https://uwmadison.box.com/s/im9ke8cdjta8nc2npgvg70zz917kvvfi
+
+Uploaded by lia@astro.wisc.edu
+
