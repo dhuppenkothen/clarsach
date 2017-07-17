@@ -11,7 +11,7 @@ conda_create ()
     conda update -q conda
     conda config --add channels pypi
     conda info -a
-    deps='coverage pip numpy astropy pytest pytest-cov python-coveralls'
+    deps='coverage pip numpy astropy pytest pytest-cov'
 
     conda create -q -n $ENV_NAME "python=$TRAVIS_PYTHON_VERSION" $deps
 }
@@ -31,8 +31,6 @@ if [ ! -d "$src" ]; then
         conda_create 
 
         source activate $ENV_NAME
-
-        pip install python-coveralls
             
         source deactivate
     popd
