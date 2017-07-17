@@ -46,6 +46,11 @@ class XSpectrum(object):
 
         return
 
+    def __store_path(self, filename):
+        self.path = '/'.join(filename.split('/')[0:-1]) + "/"
+
+        return
+
     @property
     def bin_mid(self):
         return 0.5 * (self.bin_lo + self.bin_hi)
