@@ -125,32 +125,32 @@ class TestRXTEHEXTEIntegration(object):
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
 
-class TestEXTPLADIntegration(object):
+#class TestEXTPLADIntegration(object):
 
-    @classmethod
-    def setup_class(cls):
+#    @classmethod
+#    def setup_class(cls):
 
-        cls.rmffile =  "data/LAD_40mod_200eV_rbn.rsp"
-        cls.sherpa_rmf_file = "data/extp_lad_m_rmf.txt"
+#        cls.rmffile =  "data/LAD_40mod_200eV_rbn.rsp"
+#        cls.sherpa_rmf_file = "data/extp_lad_m_rmf.txt"
 
-        rmf_list = fits.open(cls.rmffile)
-        cls.sherpa_rmf = np.loadtxt(cls.sherpa_rmf_file)[:,1]
+#        rmf_list = fits.open(cls.rmffile)
+#        cls.sherpa_rmf = np.loadtxt(cls.sherpa_rmf_file)[:,1]
 
-        cls.energ_lo = rmf_list[1].data.field("ENERG_LO")
-        cls.energ_hi = rmf_list[1].data.field("ENERG_HI")
+#        cls.energ_lo = rmf_list[1].data.field("ENERG_LO")
+#        cls.energ_hi = rmf_list[1].data.field("ENERG_HI")
 
-        rmf_list.close()
+#        rmf_list.close()
 
-        cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
-        cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
+#        cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
+#        cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
 
 
-    def test_clarsach_rmf(self):
-        rmf_c = RMF(self.rmffile)
+#    def test_clarsach_rmf(self):
+#        rmf_c = RMF(self.rmffile)
 
-        m_rmf_c = rmf_c.apply_rmf(self.m)
+#        m_rmf_c = rmf_c.apply_rmf(self.m)
 
-        assert np.allclose(self.sherpa_rmf, m_rmf_c)
+#        assert np.allclose(self.sherpa_rmf, m_rmf_c)
 
 
 class TestEXTPSFAIntegration(object):
