@@ -289,6 +289,11 @@ class ARF(object):
         self.e_unit = data.columns["ENERG_LO"].unit
         self.specresp = np.array(data.field("SPECRESP"))
 
+        if "EXPOSURE" in list(hdr.keys()):
+            self.exposure = hdr["EXPOSURE"]
+        else:
+            self.exposure = 1.0
+
         if "FRACEXPO" in data.columns.names:
             self.fracexpo = data["FRACEXPO"]
         else:
@@ -296,7 +301,7 @@ class ARF(object):
 
         return
 
-    def apply_arf(self, spec):
+    def apply_arf(self, spec, exposure=None):
         """
         Fold the spectrum through the ARF.
 
@@ -309,6 +314,14 @@ class ARF(object):
         spec : numpy.ndarray
             The (model) spectrum to be folded
 
+        exposure : float, default None
+            Value for the exposure time. By default, `apply_arf` will use the
+            exposure keyword from the ARF file. If this exposure time is not
+            correct (for example when simulated spectra use a different exposure
+            time and the ARF from a real observation), one can override the
+            default exposure by setting the `exposure` keyword to the correct
+            value.
+
         Returns
         -------
         s_arf : numpy.ndarray
@@ -319,5 +332,7 @@ class ARF(object):
         assert spec.shape[0] == self.specresp.shape[0], "The input spectrum must " \
                                                       "be of same size as the " \
                                                       "ARF array."
-
-        return np.array(spec) * self.specresp
+        if exposure is None:
+            return np.array(spec) * self.specresp * self.exposure
+        else:
+            return np.array(spec) * self.specresp * exposure

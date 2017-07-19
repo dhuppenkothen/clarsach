@@ -4,9 +4,8 @@ import numpy as np
 
 import astropy.io.fits as fits
 
-from clarsach.respond import ARF, RMF
+from clarsach.respond import ARF
 from clarsach.models.powerlaw import Powerlaw
-
 
 class TestChandraACISIntegration(object):
 
