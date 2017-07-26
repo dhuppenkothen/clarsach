@@ -1,0 +1,13 @@
+arfs/aciss_heg1_cy19.garf filter=lfs diff=lfs merge=lfs -text
+rxte_hexte_00may26_pwa.arf filter=lfs diff=lfs merge=lfs -text
+rxte_hexte_m_arf.txt filter=lfs diff=lfs merge=lfs -text
+chandra_hetg_m_rmf.txt filter=lfs diff=lfs merge=lfs -text
+rxte_pca_m_rmf.txt filter=lfs diff=lfs merge=lfs -text
+rxte_hexte_m_rmf.txt filter=lfs diff=lfs merge=lfs -text
+XTP_sfa_withSDD_rbn.rsp filter=lfs diff=lfs merge=lfs -text
+NICER_May2014_rbn.rsp filter=lfs diff=lfs merge=lfs -text
+nicer_m_rmf.txt filter=lfs diff=lfs merge=lfs -text
+RXTE_HEXTE_ClusterA.fak filter=lfs diff=lfs merge=lfs -text
+rmfs/aciss_heg1_cy19.grmf filter=lfs diff=lfs merge=lfs -text
+chandra_hetg_m_arf.txt filter=lfs diff=lfs merge=lfs -text
+rxte_hexte_97mar20c_pwa.rmf filter=lfs diff=lfs merge=lfs -text
