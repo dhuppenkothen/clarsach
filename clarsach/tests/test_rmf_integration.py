@@ -27,12 +27,13 @@ class TestChandraACISIntegration(object):
         cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
         cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
 
+        cls.exposure = 1e5
 
     def test_clarsach_rmf(self):
         arf_c = ARF(self.arffile)
         rmf_c = RMF(self.rmffile)
 
-        m_arf_c = arf_c.apply_arf(self.m)
+        m_arf_c = arf_c.apply_arf(self.m, exposure=self.exposure)
         m_rmf_c = rmf_c.apply_rmf(m_arf_c)
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
@@ -57,15 +58,17 @@ class TestChandraHETGIntegration(object):
         cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
         cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
 
+        cls.exposure = 1e5
 
     def test_clarsach_rmf(self):
         arf_c = ARF(self.arffile)
         rmf_c = RMF(self.rmffile)
 
-        m_arf_c = arf_c.apply_arf(self.m)
-        m_rmf_c = rmf_c.apply_rmf(m_arf_c*1.e5)
+        m_arf_c = arf_c.apply_arf(self.m, self.exposure)
+        m_rmf_c = rmf_c.apply_rmf(m_arf_c)
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
+
 
 class TestRXTEPCAIntegration(object):
 
@@ -94,6 +97,7 @@ class TestRXTEPCAIntegration(object):
 
         assert np.allclose(self.sherpa_rmf, m_rmf_c)
 
+
 class TestRXTEHEXTEIntegration(object):
 
     @classmethod
@@ -114,7 +118,6 @@ class TestRXTEHEXTEIntegration(object):
         cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
         cls.m = cls.pl.calculate(ener_lo=cls.energ_lo,
                                  ener_hi=cls.energ_hi)
-
 
     def test_clarsach_rmf(self):
         arf_c = ARF(self.arffile)
