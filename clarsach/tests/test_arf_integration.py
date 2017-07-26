@@ -26,10 +26,11 @@ class TestChandraACISIntegration(object):
         cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
         cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
 
+        cls.exposure = 1e5
 
     def test_clarsach_arf(self):
         arf_c = ARF(self.arffile)
-        m_arf_c = arf_c.apply_arf(self.m)
+        m_arf_c = arf_c.apply_arf(self.m, self.exposure)
 
         assert np.allclose(self.sherpa_arf, m_arf_c)
 
@@ -52,12 +53,13 @@ class TestChandraHETGIntegration(object):
         cls.pl = Powerlaw(norm=1.0, phoindex=2.0)
         cls.m = cls.pl.calculate(ener_lo=cls.energ_lo, ener_hi=cls.energ_hi)
 
+        cls.exposure = 1e5
 
     def test_clarsach_arf(self):
         arf_c = ARF(self.arffile)
-        m_arf_c = arf_c.apply_arf(self.m)
+        m_arf_c = arf_c.apply_arf(self.m, exposure=self.exposure)
 
-        assert np.allclose(self.sherpa_arf, m_arf_c*1e5)
+        assert np.allclose(self.sherpa_arf, m_arf_c)
 
 class TestRXTEHEXTEIntegration(object):
 
